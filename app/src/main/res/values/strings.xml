@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AddressBookApp</string>
+
+    <string name="hello_world">Телефонная книга</string>
+    <string name="action_settings">Настройки</string>
+    <string name="title_activity_add_contact">Добавление контакта</string>
+    <string name="title_activity_show_contact">Просмотр контакта</string>
+    <string name="contact_add_string">Добавить контакт</string>
+    <string name="update_string">Обновить</string>
+</resources>
