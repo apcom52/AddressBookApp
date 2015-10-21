@@ -1,6 +1,7 @@
 package com.apcom.addressbookapp;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,12 +23,7 @@ public class AddContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
 
-        first_name_edit = (EditText) findViewById(R.id.textEditFirstName);
-        last_name_edit = (EditText) findViewById(R.id.textEditLastName);
-        phone_edit = (EditText) findViewById(R.id.textEditPhone);
-
-        /*mDatabase = new DBHelper(this, "contactsapp.db", null, 1);
-        mSqliteDatabase = mDatabase.getWritableDatabase();*/
+        datasource = new ContactsDataSource(this);
     }
 
     @Override
@@ -52,17 +48,18 @@ public class AddContactActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Добавление контакта в базу данных
     public void clickAddContactToDBBtn(View view) {
-        /*String firstName = first_name_edit.getText().toString();
-        String lastName = last_name_edit.getText().toString();
-        String phone = phone_edit.getText().toString();*/
-        /*Profile profile = null;1
-        profile = */
-        /*Log.w(AddContactActivity.class.getName(), firstName);
-        Log.w(AddContactActivity.class.getName(), lastName);
-        Log.w(AddContactActivity.class.getName(), phone);*/
-        datasource = new ContactsDataSource(this);
-        datasource.createProfile("asd", "qwe", "123");
-        //this.finish();
+        String firstName = ((EditText)findViewById(R.id.textEditFirstName)).getText().toString();
+        String lastName = ((EditText)findViewById(R.id.textEditLastName)).getText().toString();
+        String phone = ((EditText)findViewById(R.id.textEditPhone)).getText().toString();
+
+        datasource.open();
+        datasource.createProfile(firstName, lastName, phone);
+        datasource.close();
+
+        //Возвращаем в родительскую Activity положительный ответ
+        setResult(RESULT_OK, new Intent());
+        this.finish();
     }
 }

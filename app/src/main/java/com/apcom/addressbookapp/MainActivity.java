@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -20,14 +21,26 @@ public class MainActivity extends Activity {
 
     private ListView mListView;
     private ContactsDataSource dataSource;
+    static final private int ADD_CONTACT = 0; //нужна для startActivityForResult
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //При запуске приложения получаем список пользователей
         mListView = (ListView) findViewById(R.id.listView);
         refreshPage((View)findViewById(R.id.RefreshPageButton));
+
+        //Применяем слушатель событий для listView. При клике запускаем Activity, в которую передаем id элемента
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, ShowContactActivity.class);
+                intent.putExtra("id", position);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -55,9 +68,10 @@ public class MainActivity extends Activity {
     public void clickAddContactBtn(View view) {
         //Запускаем окно "Добавление контакта"
         Intent intent = new Intent(MainActivity.this, AddContactActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, ADD_CONTACT);
     }
 
+    //Функция получения списка контактов из базы и их вывод в listView
     public void refreshPage(View view) {
         dataSource = new ContactsDataSource(this);
         dataSource.open();
@@ -65,7 +79,16 @@ public class MainActivity extends Activity {
         List<Profile> values = dataSource.getAllProfiles();
         ArrayAdapter<Profile> adapter = new ArrayAdapter<Profile>(this, android.R.layout.simple_list_item_1, values);
         mListView.setAdapter(adapter);
+    }
 
-        Log.w(MainActivity.class.getName(), "refresh");
+    //Функция, которая запускается после закрытия дочерней Activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_CONTACT) {
+            if (resultCode == RESULT_OK) {
+                refreshPage((View)findViewById(R.id.RefreshPageButton));
+            }
+        }
     }
 }
