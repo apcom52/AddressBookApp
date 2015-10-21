@@ -23,6 +23,11 @@
         <activity
             android:name=".ShowContactActivity"
             android:label="@string/title_activity_show_contact" >
+
+            <intent-filter>
+                <action android:name="com.apcom.addressbookapp.intent.showcontactactivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
     </application>
 

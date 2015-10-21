@@ -36,7 +36,8 @@ public class MainActivity extends Activity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, ShowContactActivity.class);
+                //Неявный вызов Activity (через Intent Filter)
+                Intent intent = new Intent("com.apcom.addressbookapp.intent.showcontactactivity");
                 intent.putExtra("id", position);
                 startActivity(intent);
             }
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
     }
 
     public void clickAddContactBtn(View view) {
-        //Запускаем окно "Добавление контакта"
+        //Запускаем окно "Добавление контакта" - Явный вызов Activity
         Intent intent = new Intent(MainActivity.this, AddContactActivity.class);
         startActivityForResult(intent, ADD_CONTACT);
     }
